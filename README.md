@@ -1,6 +1,7 @@
 # Proyecto Capstone: Repuestos RS
 
 ## Asignatura / Sección: 2026_2_MA_CAPSTONE_005D
+## Grupo: Grupo_8
 ## Institución: DUOC UC — Sede Maipú
 
 ---
