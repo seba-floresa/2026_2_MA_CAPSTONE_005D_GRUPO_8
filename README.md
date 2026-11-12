@@ -5,7 +5,7 @@
 
 ---
 
-## 📋 Descripción del Proyecto
+##  Descripción del Proyecto
 **Repuestos RS** es una plataforma web e-commerce diseñada para la gestión, búsqueda y comercialización de repuestos automotrices. Su propuesta central es simplificar la búsqueda de piezas mediante un selector avanzado y un modelo de compatibilidad vehicular detallado por motorización, permitiendo a los usuarios filtrar por datos del vehículo, patente o número VIN. Además, integra un panel de administración completo con control de inventario (CRUD) y seguridad basada en roles (RBAC).
 
 **Tecnologías principales:**
@@ -16,7 +16,7 @@
 
 ---
 
-## 📁 Estructura del Repositorio
+##  Estructura del Repositorio
 La organización de carpetas y artefactos sigue la estructura definida para la sección `2026_2_MA_CAPSTONE_005D`:
 
 ```text
@@ -68,7 +68,7 @@ Base de Datos y Persistencia
     Modelado: Categorías, Subcategorías, Repuestos, Vehículos (con motorización detallada) y Compatibilidad Vehicular.
 
 
-
+---
 
 Requisitos e Instalación
 Prerrequisitos
@@ -79,7 +79,7 @@ Prerrequisitos
 
     Git.
 
-
+---
 
 Pasos para Ejecutar Localmente
 
