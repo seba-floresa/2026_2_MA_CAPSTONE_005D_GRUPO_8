@@ -1,0 +1,18 @@
+[
+    {
+        "patente": "ABCD12",
+        "vin": "ABCD1234567890VIN",
+        "marca": "Toyota",
+        "modelo": "Hilux",
+        "anio": 2022,
+        "motorizacion": "2.8 Diesel"
+    },
+    {
+        "patente": "WXYZ98",
+        "vin": "WXYZ0987654321VIN",
+        "marca": "Chevrolet",
+        "modelo": "Spark",
+        "anio": 2019,
+        "motorizacion": "1.2 Bencina"
+    }
+]

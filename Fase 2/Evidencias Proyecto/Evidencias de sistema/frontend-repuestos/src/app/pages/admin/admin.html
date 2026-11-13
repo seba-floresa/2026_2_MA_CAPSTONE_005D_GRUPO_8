@@ -1,0 +1,229 @@
+<div class="container-fluid py-4 px-4 text-white">
+  
+  <div class="mb-4">
+    <h2 class="fw-bold mb-1">Panel de Administración de Inventario</h2>
+    <p class="text-secondary mb-0">Gestión de repuestos, stock y compatibilidad automotriz.</p>
+  </div>
+  
+  <div class="row">
+    <!-- COLUMNA IZQUIERDA: Formulario -->
+    <div class="col-lg-3 mb-4">
+      <div class="card bg-dark text-white border-secondary shadow-sm">
+        <div class="card-header border-secondary fw-bold bg-dark text-white d-flex justify-content-between align-items-center">
+          <span>{{ editandoId ? 'Actualizar Repuesto' : 'Ingresar Nuevo Repuesto' }}</span>
+          <button *ngIf="editandoId" class="btn btn-sm btn-outline-secondary py-0" (click)="cancelarEdicion()">Cancelar</button>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="repuestoForm" (ngSubmit)="guardarRepuesto()">
+            
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Código / SKU *</label>
+              <input type="text" class="form-control bg-secondary text-white border-0" formControlName="sku" placeholder="Ej: ALT-8921">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Nombre del Repuesto *</label>
+              <input type="text" class="form-control bg-secondary text-white border-0" formControlName="nombre" placeholder="Ej: Filtro de Aceite Original">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Marca Fabricante *</label>
+              <input type="text" class="form-control bg-secondary text-white border-0" formControlName="marca_fabricante" placeholder="Ej: Bosch, DGP, Liqui Moly">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Categoría *</label>
+              <select class="form-select bg-secondary text-white border-0" formControlName="categoria">
+                <option value="" disabled>Ej: Sistema de Frenos</option>
+                <option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nombre }}</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Subcategoría *</label>
+              <select class="form-select bg-secondary text-white border-0" formControlName="subcategoria">
+                <option value="" disabled>Selecciona subcategoría...</option>
+                <option *ngFor="let sub of subcategoriasFiltradas" [value]="sub.id">{{ sub.nombre }}</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <div class="col-7 mb-3">
+                <label class="form-label small fw-semibold">Condición *</label>
+                <select class="form-select bg-secondary text-white border-0" formControlName="condicion">
+                  <option value="NUEVO">Nuevo</option>
+                  <option value="USADO">Usado</option>
+                  <option value="REACONDICIONADO">Reacondicionado</option>
+                </select>
+              </div>
+              <div class="col-5 mb-3">
+                <label class="form-label small fw-semibold">Peso (kg) *</label>
+                <input type="number" step="0.1" class="form-control bg-secondary text-white border-0" formControlName="peso_kg">
+              </div>
+            </div>
+
+            <!-- Selector de Vehículos con Buscador y Checkmarks -->
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <label class="form-label small fw-semibold mb-0">Vehículos Compatibles</label>
+                <span class="small text-success" *ngIf="vehiculosSeleccionadosIds.length > 0">
+                  {{ vehiculosSeleccionadosIds.length }} sel.
+                  <button type="button" class="btn btn-link btn-sm text-secondary p-0 ms-1" style="text-decoration: none;" (click)="limpiarVehiculos()">
+                    <i class="bi bi-x-circle"></i>
+                  </button>
+                </span>
+              </div>
+
+              <!-- Chips de vehículos seleccionados -->
+              <div class="d-flex flex-wrap gap-1 mb-2" *ngIf="vehiculosSeleccionadosObj.length > 0">
+                <span class="badge bg-success d-inline-flex align-items-center gap-1" *ngFor="let sel of vehiculosSeleccionadosObj">
+                  {{ getEtiquetaVehiculo(sel) }}
+                  <button type="button" class="btn-close btn-close-white ms-1" style="font-size: 0.5rem;" aria-label="Quitar" (click)="toggleVehiculo(sel.id)"></button>
+                </span>
+              </div>
+
+              <!-- Caja buscador y lista -->
+              <div class="border border-secondary rounded overflow-hidden">
+                <div class="position-relative border-bottom border-secondary">
+                  <input type="text" class="form-control form-control-sm bg-secondary text-white border-0 rounded-0 pe-4" 
+                         placeholder="Buscar marca o modelo..." [(ngModel)]="filtroVehiculo" [ngModelOptions]="{ standalone: true }">
+                  <button type="button" *ngIf="filtroVehiculo" class="btn btn-sm text-white position-absolute top-50 end-0 translate-middle-y py-0 px-2" (click)="filtroVehiculo = ''">
+                    &times;
+                  </button>
+                </div>
+                
+                <div class="lista-checkmarks-vehiculos bg-dark" style="max-height: 120px; overflow-y: auto;">
+                  <label class="d-flex align-items-center gap-2 px-2 py-1 m-0 text-white" 
+                         style="cursor: pointer; font-size: 0.85rem;" 
+                         *ngFor="let v of vehiculosFiltrados" 
+                         [style.backgroundColor]="isVehiculoSeleccionado(v.id) ? 'rgba(25, 135, 84, 0.2)' : 'transparent'">
+                    <input type="checkbox" class="form-check-input mt-0" style="cursor: pointer;" 
+                           [checked]="isVehiculoSeleccionado(v.id)" (change)="toggleVehiculo(v.id)">
+                    <span>{{ getEtiquetaVehiculo(v) }}</span>
+                  </label>
+
+                  <div class="text-center text-secondary small py-2" *ngIf="vehiculosFiltrados.length === 0">
+                    No hay resultados.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-6 mb-3">
+                <label class="form-label small fw-semibold">Precio ($) *</label>
+                <input type="number" class="form-control bg-secondary text-white border-0" formControlName="precio">
+              </div>
+              <div class="col-6 mb-3">
+                <label class="form-label small fw-semibold">Stock *</label>
+                <input type="number" class="form-control bg-secondary text-white border-0" formControlName="stock">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Imagen del Producto</label>
+              <input type="file" class="form-control bg-secondary text-white border-0" (change)="onFileSelected($event)" accept="image/*">
+            </div>
+            
+            <button type="submit" class="btn w-100 fw-bold border-0 text-white" [ngStyle]="{'background-color': editandoId ? '#0d6efd' : '#5a8d6e'}" [disabled]="repuestoForm.invalid">
+              {{ editandoId ? 'Guardar Cambios' : 'Registrar Repuesto' }}
+            </button>
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: Tabla de Inventario con Buscador -->
+    <div class="col-lg-9">
+      <div class="card bg-dark text-white border-secondary shadow-sm">
+        
+        <!-- Header de la tabla con Buscador integrado -->
+        <div class="card-header border-secondary bg-dark text-white p-3 d-flex justify-content-between align-items-center">
+          <div class="fw-bold d-flex align-items-center gap-2">
+            Catálogo Registrado
+            <span class="badge bg-secondary">{{ repuestosFiltrados.length }} ítems</span>
+          </div>
+          
+          <!-- Buscador en tiempo real -->
+          <div class="input-group" style="width: 300px;">
+            <span class="input-group-text bg-secondary border-0 text-white"><i class="bi bi-search">🔍</i></span>
+            <input type="text" class="form-control bg-secondary border-0 text-white" placeholder="Buscar por SKU o Nombre..." [(ngModel)]="terminoBusqueda" (input)="filtrarRepuestos()">
+          </div>
+        </div>
+
+        <div class="card-body p-0">
+          <div class="table-responsive" style="max-height: 700px; overflow-y: auto;">
+            <table class="table table-dark table-hover mb-0 align-middle">
+              <thead class="position-sticky top-0" style="z-index: 1;">
+                <tr class="border-secondary text-secondary small">
+                  <th class="px-3">Imagen</th>
+                  <th>SKU</th>
+                  <th>Nombre y Compatibilidad</th>
+                  <th>Categoría</th>
+                  <th>Precio</th>
+                  <th class="text-center">Stock</th>
+                  <th class="text-center px-3">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let rep of repuestosFiltrados" class="border-secondary">
+                  <td class="px-3" style="width: 70px;">
+                    <img [src]="rep.imagen || 'assets/placeholder-auto.png'" class="rounded border border-secondary" style="width: 48px; height: 48px; object-fit: cover;">
+                  </td>
+                  
+                  <!-- SKU Separado -->
+                  <td class="font-monospace text-warning small">{{ rep.sku }}</td>
+                  
+                  <!-- Nombre y Autos Múltiples -->
+                  <td>
+                    <div class="fw-bold">{{ rep.nombre }}</div>
+                    <div class="text-secondary small mt-1" style="font-size: 0.75rem;">
+                      <span class="badge bg-secondary me-1" *ngFor="let auto of rep.vehiculos_nombres">{{ auto }}</span>
+                    </div>
+                  </td>
+                  
+                  <td>
+                    <div class="small">{{ rep.categoria_nombre }}</div>
+                    <div class="text-muted" style="font-size: 0.7rem;">{{ rep.subcategoria_nombre }}</div>
+                  </td>
+                  
+                  <td class="fw-bold text-success">${{ rep.precio | number }}</td>
+                  
+                  <!-- Control rápido de Stock -->
+                  <td class="text-center">
+                    <div class="d-flex align-items-center justify-content-center gap-2">
+                      <button class="btn btn-sm btn-outline-secondary py-0 px-2" (click)="actualizarStockRapido(rep, -1)">-</button>
+                      <span class="fw-bold" style="min-width: 25px;" [class.text-danger]="rep.stock === 0">{{ rep.stock }}</span>
+                      <button class="btn btn-sm btn-outline-secondary py-0 px-2" (click)="actualizarStockRapido(rep, 1)">+</button>
+                    </div>
+                  </td>
+                  
+                  <!-- Menú de Acciones (Dropdown de Bootstrap) -->
+                  <td class="text-center px-3">
+                    <div class="dropdown">
+                      <button class="btn btn-sm btn-dark border-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        ⋮
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow">
+                        <li><a class="dropdown-item" href="javascript:void(0)" (click)="cargarParaEditar(rep)">✏️ Editar Producto Completo</a></li>
+                        <li><hr class="dropdown-divider border-secondary"></li>
+                        <li><a class="dropdown-item text-danger" href="javascript:void(0)" (click)="borrarRepuesto(rep.id)">🗑️ Eliminar Producto</a></li>
+                      </ul>
+                    </div>
+                  </td>
+                  
+                </tr>
+                <tr *ngIf="repuestosFiltrados.length === 0">
+                  <td colspan="7" class="text-center text-secondary py-5">
+                    No se encontraron repuestos.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

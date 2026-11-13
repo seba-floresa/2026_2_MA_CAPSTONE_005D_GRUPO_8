@@ -1,0 +1,135 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+/* Tema Base Oscuro */
+body {
+    background-color: #222222; 
+    color: #f8f9fa;
+}
+.navbar {
+    background-color: #1a1a1a !important; 
+}
+
+/* Color Corporativo (Verde) */
+.text-brand { color: #3F7856 !important; }
+.bg-brand { background-color: #3F7856 !important; }
+
+/* Botones Principales */
+.btn-brand {
+    background-color: #3F7856;
+    color: #fff;
+    border: none;
+}
+.btn-brand:hover {
+    background-color: #2b543c; /* Verde más oscuro al pasar el mouse */
+    color: #fff;
+}
+
+/* Efecto Hover para los menús (Perfil y Repuestos) */
+.nav-link { transition: color 0.2s; }
+.nav-link:hover, .nav-item.dropdown:hover .nav-link {
+    color: #3F7856 !important;
+}
+.dropdown-menu-dark .dropdown-item:hover {
+    background-color: #3F7856;
+}
+
+/* Tarjetas de Producto */
+.product-card {
+    background-color: #333333;
+    border: 1px solid #444;
+    border-radius: 8px;
+    transition: transform 0.2s;
+}
+.product-card:hover { transform: translateY(-5px); }
+.product-card img {
+    background-color: #fff; 
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+/* Buscador tipo SoloTodo (Corregido) */
+.search-container { 
+    position: relative; 
+    width: 100%; 
+    max-width: 500px; 
+    margin: 0 15px; /* Margen externo para separar del logo */
+}
+.search-input {
+    background-color: #222 !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+    border-radius: 20px !important;
+    padding-right: 40px !important; /* Espacio interno derecho para la lupa */
+    padding-left: 20px !important; /* Espacio interno izquierdo para que no parta tan pegado */
+}
+/* Forzar que el texto fantasma se vea gris claro */
+.search-input::placeholder {
+    color: #999 !important;
+    opacity: 1; 
+}
+.search-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(63, 120, 86, 0.25) !important;
+    border-color: #3F7856 !important;
+}
+.search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* --- Formularios Animados (Floating Labels) en Modo Oscuro --- */
+.form-floating > .form-control,
+.form-floating > .form-control:focus {
+    background-color: #222 !important;
+    border: 1px solid #444 !important;
+    color: #fff !important;
+}
+/* Color de la letra cuando está abajo */
+.form-floating > label {
+    color: #aaa;
+}
+/* Color de la letra (verde) cuando sube */
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    color: #3F7856 !important;
+}
+/* Fondo del cuadrito que tapa la línea al subir */
+.form-floating > .form-control:focus ~ label::after,
+.form-floating > .form-control:not(:placeholder-shown) ~ label::after {
+    background-color: #222 !important;
+}
+.form-floating > .form-control:focus {
+    border-color: #3F7856 !important;
+    box-shadow: 0 0 0 0.25rem rgba(63, 120, 86, 0.25) !important;
+}   
+
+/* Arreglo global para los textos grises que no se ven (SKU, Login, etc) */
+.text-muted {
+    color: #e0e0e0 !important; /* Un blanco/gris claro perfecto para fondo oscuro */
+}
+
+/* Animación del texto de ejemplo (Placeholder) en los formularios */
+.form-floating > .form-control::placeholder {
+    color: transparent !important; /* Invisible por defecto */
+}
+.form-floating > .form-control:focus::placeholder {
+    color: #aaaaaa !important; /* Aparece gris claro al hacer clic */
+}
+
+/* --- Ajuste fino para la altura de la animación --- */
+/* 1. Hace que la etiqueta verde suba más (translateY ajusta la altura) */
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    transform: scale(0.85) translateY(-0.9rem) translateX(0.15rem) !important;
+}
+
+/* 2. Empuja el texto que escribe el usuario un poco más hacia abajo */
+.form-floating > .form-control:focus,
+.form-floating > .form-control:not(:placeholder-shown) {
+    padding-top: 2rem !important;
+    padding-bottom: 0.5rem !important;
+}

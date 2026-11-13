@@ -1,0 +1,49 @@
+<div class="container mt-5 pt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-5 col-lg-4">
+      
+      <div class="card product-card p-4 p-sm-5 text-white shadow">
+        
+        <div class="text-center mb-4">
+          <h4 class="fw-bold text-white mb-2">¡Bienvenid@ de vuelta a Repuestos RS!</h4>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+          
+          <div class="mb-2">
+            <div class="form-floating">
+              <input type="email" class="form-control" [class.is-invalid]="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched" id="emailInput" placeholder="usuario@ejemplo.cl" formControlName="correo">
+              <label for="emailInput">Correo</label>
+            </div>
+            <div *ngIf="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched" class="text-danger small mt-1 ms-2">
+              Ingresa un correo válido (ej: nombre@dominio.cl).
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="form-floating">
+              <input type="password" class="form-control" [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" id="passInput" placeholder="Ingresar contraseña" formControlName="password">
+              <label for="passInput">Contraseña</label>
+            </div>
+            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger small mt-1 ms-2">
+              La contraseña es requerida.
+            </div>
+          </div>
+
+          <div class="text-center mb-4">
+            <a href="#" class="text-brand text-decoration-none small fw-semibold">¿Olvidaste tu contraseña?</a>
+          </div>
+
+          <button type="submit" class="btn btn-brand w-100 fw-bold py-2 mb-4" [disabled]="loginForm.invalid">Entrar a mi cuenta</button>
+
+          <div class="text-center">
+            <span class="text-muted small">¿No tienes cuenta? </span>
+            <a routerLink="/registro" class="text-brand text-decoration-none fw-bold small">Regístrate aquí</a>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
